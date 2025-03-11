@@ -34,28 +34,33 @@ function makeGrid(size) {
   const squareWidth = getSquareWidth();
   const fragment = document.createDocumentFragment();
 
-
   squaresContainer.style.display = 'grid';
   squaresContainer.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
-
 
   for (let i = 0; i < size * size; i++) {
     const square = document.createElement('div');
     let opacityValue = 0.1;
+    let lastPaintTime = 0;
+    const OPACITY_DELAY = 50; // Delay in milliseconds
 
     square.classList.add('square');
     
-
     const paint = () => {
       if (drawingMode) {
-        if (rainbowCheckbox.checked) {
-          let rgb = randomRGB();
-          square.style.backgroundColor = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${opacityValue})`;
-        } else {
-          let colorToRgb = hexToRgb(penColor.value);
-          square.style.backgroundColor = `rgba(${colorToRgb.r}, ${colorToRgb.g}, ${colorToRgb.b}, ${opacityValue})`;
+        const currentTime = Date.now();
+        
+        // Check if enough time has passed since last opacity increase
+        if (currentTime - lastPaintTime >= OPACITY_DELAY) {
+          if (rainbowCheckbox.checked) {
+            let rgb = randomRGB();
+            square.style.backgroundColor = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${opacityValue})`;
+          } else {
+            let colorToRgb = hexToRgb(penColor.value);
+            square.style.backgroundColor = `rgba(${colorToRgb.r}, ${colorToRgb.g}, ${colorToRgb.b}, ${opacityValue})`;
+          }
+          opacityValue = Math.min(opacityValue + 0.1, 1);
+          lastPaintTime = currentTime;
         }
-        opacityValue = Math.min(opacityValue + 0.1, 1);
       }
     };
 
