@@ -1,4 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap");
+* {
+  box-sizing: border-box; 
+}
 
 body {
   display: flex;
@@ -37,10 +40,9 @@ button {
   display: flex;
   flex-shrink: 0;
   justify-content: center; /* Centra el contenido horizontalmente dentro del contenedor */
+  width: 600px;
+  height: 600px;
 
-  width: min(35%, 35vw);
-  aspect-ratio: 1;
-  max-width: 35%;
   margin: 0 auto;
 }
 
