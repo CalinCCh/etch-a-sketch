@@ -1,5 +1,7 @@
 const squaresContainer = document.querySelector("#squares");
-const squareWidth = squaresContainer.offsetWidth;
+function getSquareWidth() {
+  return squaresContainer.clientWidth;
+}
 const randomBetween = (min, max) => min + Math.floor(Math.random() * (max - min + 1));
 
 const changeSize = document.querySelector("#changeSize");
@@ -18,6 +20,7 @@ changeSize.addEventListener("click", function () {
 
 function makeGrid(size) {
   squaresContainer.innerHTML = "";
+  const squareWidth = getSquareWidth();
   const squareSize = squareWidth / size;
   for (let i = 0; i < size; i++) {
     let row = document.createElement("div");
