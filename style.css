@@ -37,8 +37,9 @@ button {
   display: flex;
   flex-shrink: 0;
   justify-content: center; /* Centra el contenido horizontalmente dentro del contenedor */
-  align-items: center; /* Centra el contenido verticalmente dentro del contenedor */
-  width: 100%;
+
+  width: min(35%, 35vw);
+  aspect-ratio: 1;
   max-width: 35%;
   margin: 0 auto;
 }
