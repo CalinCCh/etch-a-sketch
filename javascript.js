@@ -1,46 +1,86 @@
 const squaresContainer = document.querySelector("#squares");
-function getSquareWidth() {
-  return squaresContainer.clientWidth;
+
+var slider = document.getElementById("myRange");
+var output = document.getElementById("sliderValue");
+var penColor = document.getElementById("colorPicker");
+var rainbowCheckbox = document.getElementById("rainbowCheckbox");
+var clearButton = document.getElementById("clear");
+
+let drawingMode = false;
+
+output.innerHTML = slider.value;
+
+
+function debounce(func, wait) {
+  let timeout;
+  return function(...args) {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func.apply(this, args), wait);
+  };
 }
 
-const changeSize = document.querySelector("#changeSize");
 
-changeSize.addEventListener("click", function () {
-  let newSize = prompt("Enter new grid size(1-100)");
-  if (newSize !== null) {
-    newSize = parseInt(newSize);
-    if (newSize > 0 && newSize <= 100) {
-      makeGrid(newSize);
-    } else {
-      alert("Please enter a number between 1-100");
-    }
-  }
+
+squaresContainer.addEventListener('mousedown', (e) => {
+  e.preventDefault(); 
+  drawingMode = true;
 });
+
+squaresContainer.addEventListener('mouseup', () => drawingMode = false);
+squaresContainer.addEventListener('mouseleave', () => drawingMode = false);
 
 function makeGrid(size) {
   squaresContainer.innerHTML = "";
   const squareWidth = getSquareWidth();
-  const squareSize = Math.floor(squareWidth / size);
-  for (let i = 0; i < size; i++) {
-    let row = document.createElement("div");
+  const fragment = document.createDocumentFragment();
 
-    for (let j = 0; j < size; j++) {
-      let square = document.createElement("div");
 
-      square.classList.add("square");
-      square.style.width = `${squareSize}px`;
-      square.style.height = `${squareSize}px`;
+  squaresContainer.style.display = 'grid';
+  squaresContainer.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
 
-      square.addEventListener("mouseover", (event) => {
-        let rgb = randomRGB();
-        square.style.backgroundColor = `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`;
-      });
 
-      row.appendChild(square);
-    }
-    squaresContainer.appendChild(row);
+  for (let i = 0; i < size * size; i++) {
+    const square = document.createElement('div');
+    let opacityValue = 0.1;
+
+    square.classList.add('square');
+    
+
+    const paint = () => {
+      if (drawingMode) {
+        if (rainbowCheckbox.checked) {
+          let rgb = randomRGB();
+          square.style.backgroundColor = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${opacityValue})`;
+        } else {
+          let colorToRgb = hexToRgb(penColor.value);
+          square.style.backgroundColor = `rgba(${colorToRgb.r}, ${colorToRgb.g}, ${colorToRgb.b}, ${opacityValue})`;
+        }
+        opacityValue = Math.min(opacityValue + 0.1, 1);
+      }
+    };
+
+    square.addEventListener('mousemove', paint);
+    square.addEventListener('mousedown', paint); 
+
+    fragment.appendChild(square);
   }
+
+  squaresContainer.appendChild(fragment);
 }
+
+
+slider.addEventListener('input', (e) => {
+  output.textContent = e.target.value;
+});
+
+slider.addEventListener('change', (e) => {
+  makeGrid(parseInt(e.target.value));
+});
+
+
+clearButton.addEventListener("click", () => {
+  makeGrid(parseInt(slider.value));
+});
 
 function randomRGB() {
   let rgb = [];
@@ -50,5 +90,19 @@ function randomRGB() {
   }
   return rgb;
 }
+
+const hexToRgb = (hex) => {
+  const r = parseInt(hex.slice(1, 3), 16).toString();
+  const g = parseInt(hex.slice(3, 5), 16).toString();
+  const b = parseInt(hex.slice(5, 7), 16).toString();
+  
+  return { r, g, b };
+}
+
+function getSquareWidth() {
+  return squaresContainer.clientWidth;
+}
+
+
 
 makeGrid(16);

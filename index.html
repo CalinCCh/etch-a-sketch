@@ -8,10 +8,39 @@
   </head>
   <body>
     <div class="header">
-      <p>Etch-a-Sketch</p>
+      <a>Etch-a-Sketch</a>
     </div>
-    <button id="changeSize">Change grid size</button>
-    <div id="squares"></div>
+    <div class="container">
+      <div class="menu">
+        <div class="color-picker">
+          <label for="colorPicker">Pen Color</label>
+          <input type="color" id="colorPicker" value="#000000">
+        </div>
+
+        <div class="slide-container">
+          <label for="myRange">Grid size</label>
+          <input type="range" min="1" max="100" value="16" class="slider" id="myRange">
+          <a id="sliderValue"></a>
+        </div>
+
+        <div class="rainbow">
+          <a>Rainbow mode</a>
+          <label class="switch">
+            <input type="checkbox" id="rainbowCheckbox">
+            <span class="slider round"></span>
+          </label>
+        </div>
+
+        <div class="clearButton">
+          <button id="clear">Clear</button>
+        </div>
+        
+
+        
+      </div>
+      <div id="squares"></div>
+    </div>
+
 
     <script src="javascript.js"></script>
   </body>
